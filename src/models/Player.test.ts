@@ -4,40 +4,38 @@ import { Player } from "./Player";
 const jack = new Player({ name: "Jack" });
 const jill = new Player({ name: "Jill" });
 
-describe("Player", () => {
-  describe("#is", () => {
-    it("returns true if the names match", () => {
-      expect(jack.is(jack)).toBeTruthy();
-      expect(jill.is(jill)).toBeTruthy();
-    });
-
-    it("returns false if the names do not match", () => {
-      expect(jack.is(jill)).toBeFalsy();
-      expect(jill.is(jack)).toBeFalsy();
-    });
+describe("#is", () => {
+  it("returns true if the names match", () => {
+    expect(jack.is(jack)).toBeTruthy();
+    expect(jill.is(jill)).toBeTruthy();
   });
 
-  describe("#isNot", () => {
-    it("returns true if the names do not match", () => {
-      expect(jack.isNot(jill)).toBeTruthy();
-      expect(jill.isNot(jack)).toBeTruthy();
-    });
+  it("returns false if the names do not match", () => {
+    expect(jack.is(jill)).toBeFalsy();
+    expect(jill.is(jack)).toBeFalsy();
+  });
+});
 
-    it("returns false if the names match", () => {
-      expect(jack.isNot(jack)).toBeFalsy();
-      expect(jill.isNot(jill)).toBeFalsy();
-    });
+describe("#isNot", () => {
+  it("returns true if the names do not match", () => {
+    expect(jack.isNot(jill)).toBeTruthy();
+    expect(jill.isNot(jack)).toBeTruthy();
   });
 
-  describe("#receiveCard", () => {
-    it("adds a card to the hand", () => {
-      const player = new Player({ name: "Player 1" });
+  it("returns false if the names match", () => {
+    expect(jack.isNot(jack)).toBeFalsy();
+    expect(jill.isNot(jill)).toBeFalsy();
+  });
+});
 
-      expect(player.getHand().length).toEqual(0);
+describe("#receiveCard", () => {
+  it("adds a card to the hand", () => {
+    const player = new Player({ name: "Player 1" });
 
-      player.receiveCard(new Card(10));
+    expect(player.getHand().length).toEqual(0);
 
-      expect(player.getHand().length).toEqual(1);
-    });
+    player.receiveCard(new Card(10));
+
+    expect(player.getHand().length).toEqual(1);
   });
 });
