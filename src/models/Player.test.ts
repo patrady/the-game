@@ -32,11 +32,22 @@ describe("#receiveCard", () => {
   it("adds a card to the hand", () => {
     const player = new Player({ name: "Player 1" });
 
-    expect(player.getHand().length).toEqual(0);
-
     player.receiveCard(new Card(10));
 
-    expect(player.getHand().length).toEqual(1);
+    expect(player.getHand()).toEqual([new Card(10)]);
+  });
+
+  it("adds an array of cards to the hand", () => {
+    const player = new Player({ name: "Player 1" });
+
+    player.receiveCard(new Card(10));
+    player.receiveCard([new Card(11), new Card(12)]);
+
+    expect(player.getHand()).toEqual([
+      new Card(10),
+      new Card(11),
+      new Card(12),
+    ]);
   });
 });
 

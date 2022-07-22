@@ -13,7 +13,19 @@ export class Deck {
     return this.cards;
   }
 
-  public draw() {
+  public drawAfterTurn() {
+    if (this.isEmpty()) {
+      throw new Error("There are no cards left in the deck");
+    }
+
+    if (this.isOnlyOneCardLeft()) {
+      return [this.drawSingle()];
+    }
+
+    return [this.drawSingle(), this.drawSingle()];
+  }
+
+  public drawSingle() {
     if (this.isEmpty()) {
       throw new Error("There are no cards left in the deck");
     }
@@ -23,6 +35,10 @@ export class Deck {
 
   public isEmpty() {
     return this.getCards().length === 0;
+  }
+
+  public isOnlyOneCardLeft() {
+    return this.getCards().length === 1;
   }
 
   private range(start: number, end: number) {

@@ -28,6 +28,11 @@ const App = () => {
     setCounter((prev) => prev + 1);
   }
 
+  function drawMoreCards() {
+    game.getCurrentPlayer().receiveCard(game.getDeck().drawAfterTurn());
+    setCounter((prev) => prev + 1);
+  }
+
   return (
     <div className="App">
       <DndProvider backend={HTML5Backend}>
@@ -64,6 +69,7 @@ const App = () => {
         ))}
 
         {!game.isInProgress() && <button onClick={startGame}>Start</button>}
+        {game.isInProgress() && <button onClick={drawMoreCards}>Draw</button>}
       </DndProvider>
     </div>
   );

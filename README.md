@@ -8,3 +8,4 @@
     3. Identify where logic should be split into different classes
     4. Decouple classes because repeated test setup is more noticeable
 2. I start at a higher level of abstraction, I find myself getting distracted writing tests for the lower-level abstractions
+3. I'm starting to find that I don't trust myself to edit a file without opening up the tests for it and creating a test case first. The evolution is real...

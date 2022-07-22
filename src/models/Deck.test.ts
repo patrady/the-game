@@ -5,7 +5,7 @@ it("returns the cards left to be dealt", () => {
   const deck = new Deck(new Card(1), new Card(100));
   expect(deck.getCards().length).toEqual(98); // Excludes 1 and 100
 
-  deck.draw();
+  deck.drawSingle();
 
   expect(deck.getCards().length).toEqual(97);
 });
@@ -26,16 +26,46 @@ describe("#getCards", () => {
   });
 });
 
-describe("#draw", () => {
+describe("#drawAfterTurn", () => {
+  describe("when two cards are available", () => {
+    it("draws two cards", () => {
+      const deck = new Deck(new Card(1), new Card(5));
+
+      const cards = deck.drawAfterTurn();
+
+      expect(cards.length).toEqual(2);
+    });
+  });
+
+  describe("when one card is available", () => {
+    it("draws one card", () => {
+      const deck = new Deck(new Card(1), new Card(3));
+
+      const cards = deck.drawAfterTurn();
+
+      expect(cards.length).toEqual(1);
+    });
+  });
+
+  describe("when no cards are available", () => {
+    it("throws an error", () => {
+      const deck = new Deck(new Card(1), new Card(1));
+
+      expect(() => deck.drawAfterTurn()).toThrow();
+    });
+  });
+});
+
+describe("#drawSingle", () => {
   it("draws a random card", () => {
     const deck = new Deck(new Card(1), new Card(100));
 
-    const card1 = deck.draw();
+    const card1 = deck.drawSingle();
 
     expect(card1.getValue()).toBeGreaterThan(1);
     expect(card1.getValue()).toBeLessThan(100);
 
-    const card2 = deck.draw();
+    const card2 = deck.drawSingle();
 
     expect(card2.isNot(card1)).toBeTruthy();
     expect(card1.getValue()).toBeGreaterThan(1);
@@ -46,11 +76,13 @@ describe("#draw", () => {
     it("throws an error", () => {
       const deck = new Deck(new Card(1), new Card(5));
 
-      deck.draw(); // Draw the 2
-      deck.draw(); // Draw the 3
-      deck.draw(); // Draw the 4
+      deck.drawSingle(); // Draw the 2
+      deck.drawSingle(); // Draw the 3
+      deck.drawSingle(); // Draw the 4
 
-      expect(() => deck.draw()).toThrow("There are no cards left in the deck");
+      expect(() => deck.drawSingle()).toThrow(
+        "There are no cards left in the deck"
+      );
     });
   });
 });
