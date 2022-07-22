@@ -10,6 +10,22 @@ it("returns the cards left to be dealt", () => {
   expect(deck.getCards().length).toEqual(97);
 });
 
+describe("#getCards", () => {
+  it("generates a correct deck", () => {
+    const deck = new Deck(new Card(1), new Card(10));
+    expect(deck.getCards()).toEqual([
+      new Card(2),
+      new Card(3),
+      new Card(4),
+      new Card(5),
+      new Card(6),
+      new Card(7),
+      new Card(8),
+      new Card(9),
+    ]);
+  });
+});
+
 describe("#draw", () => {
   it("draws a random card", () => {
     const deck = new Deck(new Card(1), new Card(100));
