@@ -1,5 +1,8 @@
 import { Card } from "./Card";
 import { Player } from "./Player";
+import { AscendingRow } from "./Row";
+
+jest.mock("./Row");
 
 const jack = new Player({ name: "Jack" });
 const jill = new Player({ name: "Jill" });
@@ -51,25 +54,28 @@ describe("#receiveCard", () => {
   });
 });
 
-describe("#removeCard", () => {
+describe("#playCard", () => {
   describe("when the player has the card", () => {
     it("removes the card from the player's hand", () => {
       const player = new Player({ name: "Player 1" });
+      const ascendingRow = new AscendingRow(new Card(1));
       player.receiveCard(new Card(10));
       player.receiveCard(new Card(15));
       player.receiveCard(new Card(20));
 
-      player.removeCard(new Card(10));
+      player.playCard(new Card(10), ascendingRow);
 
-      expect(player.getHand().length).toEqual(2);
+      expect(player.getNumberOfCardsInHand()).toEqual(2);
+      expect(ascendingRow.add).toHaveBeenCalled();
     });
   });
 
   describe("when the player does not have the card", () => {
     it("throws an error", () => {
       const player = new Player({ name: "Player 1" });
+      const ascendingRow = new AscendingRow(new Card(1));
 
-      expect(() => player.removeCard(new Card(10))).toThrow(
+      expect(() => player.playCard(new Card(10), ascendingRow)).toThrow(
         "Card 10 is not in the player's hand"
       );
     });

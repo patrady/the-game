@@ -175,7 +175,7 @@ describe("#start", () => {
     game.start();
 
     game.getPlayers().forEach((player) => {
-      expect(player.getHand().length).toEqual(6);
+      expect(player.getNumberOfCardsInHand()).toEqual(6);
     });
   });
 
@@ -221,5 +221,42 @@ describe("#isInProgress", () => {
 
   xdescribe("when the game is over", () => {
     it("returns false", () => {});
+  });
+});
+
+describe("#nextTurn", () => {
+  it("gives the turn to the next player", () => {
+    const player1 = new Player({ name: "Player 1" });
+    const player2 = new Player({ name: "Player 2" });
+    const player3 = new Player({ name: "Player 3" });
+    const players = [player1, player2, player3];
+    const game = new Game(players);
+
+    game.start();
+
+    expect(game.getCurrentPlayer()).toEqual(player1);
+
+    player1.playRandomCard(); // 5 cards in hand
+    player1.playRandomCard(); // 4 cards in hand
+    game.nextTurn();
+
+    expect(player1.getNumberOfCardsInHand()).toEqual(6);
+    expect(game.getCurrentPlayer()).toEqual(player2);
+
+    player2.playRandomCard(); // 5 cards in hand
+    player2.playRandomCard(); // 4 cards in hand
+    // player2.playRandomCard(); // 3 cards in hand
+    // player2.playRandomCard(); // 2 cards in hand
+    game.nextTurn();
+
+    expect(player2.getNumberOfCardsInHand()).toEqual(6);
+    expect(game.getCurrentPlayer()).toEqual(player3);
+
+    player3.playRandomCard(); // 5 cards in hand
+    player3.playRandomCard(); // 5 cards in hand
+    game.nextTurn();
+
+    expect(player3.getNumberOfCardsInHand()).toEqual(6);
+    expect(game.getCurrentPlayer()).toEqual(player1);
   });
 });

@@ -12,10 +12,15 @@ import { Row as RowModel } from "./models";
 
 const room = new Room();
 room.addPlayer(new Player({ name: "Patrick" }));
+room.addPlayer(new Player({ name: "James" }));
+room.addPlayer(new Player({ name: "Julie" }));
+room.addPlayer(new Player({ name: "Mary" }));
 
 const App = () => {
   const [game, setGame] = useState(new Game(room.getPlayers()));
+  const [cardsPlayedInTurn, setCardsPlayedInTurn] = useState<CardModel[]>([]);
   const [counter, setCounter] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const canEndTurn = cardsPlayedInTurn.length >= 2;
 
   function startGame() {
     setGame(game.start());
@@ -23,14 +28,13 @@ const App = () => {
   }
 
   function dropCard(card: CardModel, row: RowModel) {
-    game.getCurrentPlayer().removeCard(card);
-    row.add(card);
-    setCounter((prev) => prev + 1);
+    game.getCurrentPlayer().playCard(card, row);
+    setCardsPlayedInTurn((prev) => [...prev, card]);
   }
 
-  function drawMoreCards() {
-    game.getCurrentPlayer().receiveCard(game.getDeck().drawAfterTurn());
-    setCounter((prev) => prev + 1);
+  function endTurn() {
+    game.nextTurn();
+    setCardsPlayedInTurn([]);
   }
 
   return (
@@ -60,16 +64,21 @@ const App = () => {
           row={game.ascendingRow2}
           onDrop={(card) => dropCard(card, game.ascendingRow2)}
         />
-        {game.getPlayers().map((player) => (
-          <div key={player.name}>
-            {player.getHand().map((card) => (
-              <DraggableCard key={card.getValue()} value={card.getValue()} />
-            ))}
-          </div>
-        ))}
+
+        <hr />
+        <p>{game.getCurrentPlayer().name} turn</p>
+
+        {game
+          .getCurrentPlayer()
+          .getHand()
+          .map((card) => (
+            <DraggableCard key={card.getValue()} value={card.getValue()} />
+          ))}
 
         {!game.isInProgress() && <button onClick={startGame}>Start</button>}
-        {game.isInProgress() && <button onClick={drawMoreCards}>Draw</button>}
+        {game.isInProgress() && canEndTurn && (
+          <button onClick={endTurn}>End Turn</button>
+        )}
       </DndProvider>
     </div>
   );
