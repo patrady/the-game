@@ -25,6 +25,16 @@ describe("AscendingRow", () => {
         );
       });
     });
+
+    describe('when the card is exactly 10 less', () => {
+      it("adds the card", () => {
+        const row = new AscendingRow(new Card(1));
+        
+        row.add(new Card(12));
+
+        expect(row.add(new Card(2))).toBeTruthy();
+      })
+    });
   });
 });
 
@@ -51,6 +61,16 @@ describe("DescendingRow", () => {
           "This card cannot be played"
         );
       });
+    });
+
+    describe('when the card is exactly 10 more', () => {
+      it("adds the card", () => {
+        const row = new DescendingRow(new Card(100));
+        
+        row.add(new Card(85));
+
+        expect(row.add(new Card(95))).toBeTruthy();
+      })
     });
   });
 });

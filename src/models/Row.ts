@@ -29,12 +29,28 @@ export abstract class Row {
 
 export class AscendingRow extends Row {
   public isValid(card: Card) {
+    return this.isCardGreater(card) || this.isCardTenLess(card);
+  }
+
+  private isCardGreater(card: Card) {
     return card.getValue() > this.lastCard().getValue();
+  }
+
+  private isCardTenLess(card: Card) {
+    return this.lastCard().getValue() - card.getValue() === 10;
   }
 }
 
 export class DescendingRow extends Row {
   public isValid(card: Card) {
+    return this.isCardLess(card) || this.isCardTenGreater(card);
+  }
+
+  private isCardLess(card: Card) {
     return card.getValue() < this.lastCard().getValue();
+  }
+
+  private isCardTenGreater(card: Card) {
+    return card.getValue() - this.lastCard().getValue() === 10;
   }
 }
