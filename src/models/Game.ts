@@ -44,6 +44,10 @@ export class Game {
     return this.currentPlayer;
   }
 
+  public getDeck() {
+    return this.deck;
+  }
+
   public getMinCard() {
     return this.minCard;
   }
@@ -76,7 +80,7 @@ export class Game {
   private dealInitialCards() {
     for (let i = 0; i < DEFAULT_INITIAL_CARDS; i++) {
       this.getPlayers().forEach((player) => {
-        player.receiveCard(this.deck.draw());
+        player.receiveCard(this.deck.drawSingle());
       });
     }
   }

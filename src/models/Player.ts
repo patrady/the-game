@@ -21,8 +21,12 @@ export class Player {
     return this.name === player.name;
   }
 
-  public receiveCard(card: Card) {
-    this.hand.push(card);
+  public receiveCard(card: Card | Card[]) {
+    if (Array.isArray(card)) {
+      this.hand.push(...card);
+    } else {
+      this.hand.push(card);
+    }
   }
 
   public removeCard(card: Card) {
