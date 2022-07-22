@@ -15,7 +15,7 @@ room.addPlayer(new Player({ name: "Patrick" }));
 
 const App = () => {
   const [game, setGame] = useState(new Game(room.getPlayers()));
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   function startGame() {
     setGame(game.start());
