@@ -39,3 +39,28 @@ describe("#receiveCard", () => {
     expect(player.getHand().length).toEqual(1);
   });
 });
+
+describe("#removeCard", () => {
+  describe("when the player has the card", () => {
+    it("removes the card from the player's hand", () => {
+      const player = new Player({ name: "Player 1" });
+      player.receiveCard(new Card(10));
+      player.receiveCard(new Card(15));
+      player.receiveCard(new Card(20));
+
+      player.removeCard(new Card(10));
+
+      expect(player.getHand().length).toEqual(2);
+    });
+  });
+
+  describe("when the player does not have the card", () => {
+    it("throws an error", () => {
+      const player = new Player({ name: "Player 1" });
+
+      expect(() => player.removeCard(new Card(10))).toThrow(
+        "Card 10 is not in the player's hand"
+      );
+    });
+  });
+});
