@@ -14,16 +14,16 @@ enum GameStatus {
 }
 
 export class Game {
-  minCard = new Card(DEFAULT_MIN_CARD_VALUE);
-  maxCard = new Card(DEFAULT_MAX_CARD_VALUE);
-  players: Player[];
-  status: GameStatus;
-  deck: Deck;
-  ascendingRow1: AscendingRow;
-  ascendingRow2: AscendingRow;
-  descendingRow1: DescendingRow;
-  descendingRow2: DescendingRow;
-  currentPlayer: Player;
+  public ascendingRow1: AscendingRow;
+  public ascendingRow2: AscendingRow;
+  public descendingRow1: DescendingRow;
+  public descendingRow2: DescendingRow;
+  private minCard = new Card(DEFAULT_MIN_CARD_VALUE);
+  private maxCard = new Card(DEFAULT_MAX_CARD_VALUE);
+  private players: Player[];
+  private status: GameStatus;
+  private deck: Deck;
+  private currentPlayer: Player;
 
   constructor(players: Player[]) {
     this.players = players;
@@ -69,6 +69,8 @@ export class Game {
     this.dealInitialCards();
 
     this.currentPlayer = this.getPlayers()[0];
+
+    return this;
   }
 
   private dealInitialCards() {
@@ -83,7 +85,7 @@ export class Game {
     return this.getPlayers().length === 0;
   }
 
-  private isInProgress() {
+  public isInProgress() {
     return this.status === GameStatus.InProgress;
   }
 }

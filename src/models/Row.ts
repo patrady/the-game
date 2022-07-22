@@ -1,7 +1,7 @@
 import { Card } from "./Card";
 
 export abstract class Row {
-  cards: Card[] = [];
+  private cards: Card[] = [];
 
   constructor(initialCard: Card) {
     this.cards.push(initialCard);

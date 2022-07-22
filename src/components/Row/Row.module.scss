@@ -1,0 +1,24 @@
+.Row {
+  padding: 1rem;
+  border: 1px solid black;
+  display: flex;
+
+  &--ascending {
+    justify-content: flex-start;
+    background: linear-gradient(90deg, darkgreen, green);
+    flex-direction: row-reverse;
+
+    & > * {
+      transform: rotate(90deg);
+    }
+  }
+
+  &--descending {
+    justify-content: flex-start;
+    background: linear-gradient(90deg, red, darkred);
+
+    & > * {
+      transform: rotate(-90deg);
+    }
+  }
+}

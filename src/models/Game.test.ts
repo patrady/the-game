@@ -199,3 +199,27 @@ describe("#start", () => {
     });
   });
 });
+
+describe("#isInProgress", () => {
+  describe("when the game is in progress", () => {
+    it("returns true", () => {
+      const game = new Game(players);
+
+      game.start();
+
+      expect(game.isInProgress()).toBeTruthy();
+    });
+  });
+
+  describe("when the game has not started", () => {
+    it("returns false", () => {
+      const game = new Game(players);
+
+      expect(game.isInProgress()).toBeFalsy();
+    });
+  });
+
+  xdescribe("when the game is over", () => {
+    it("returns false", () => {});
+  });
+});
