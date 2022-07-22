@@ -5,7 +5,7 @@ import { AscendingRow, DescendingRow } from "./Row";
 
 const DEFAULT_MIN_CARD_VALUE = 1;
 const DEFAULT_MAX_CARD_VALUE = 100;
-const DEFAULT_INITIAL_CARDS = 6;
+const DEFAULT_MAX_CARDS_IN_HAND = 6;
 
 enum GameStatus {
   NotStarted = "NotStarted",
@@ -87,7 +87,16 @@ export class Game {
   }
 
   private drawMoreCards() {
-    this.getCurrentPlayer().receiveCard(this.getDeck().drawAfterTurn());
+    this.getCurrentPlayer().receiveCard(
+      this.getDeck().draw(this.numberOfCardsToDraw())
+    );
+  }
+
+  private numberOfCardsToDraw() {
+    return (
+      DEFAULT_MAX_CARDS_IN_HAND -
+      this.getCurrentPlayer().getNumberOfCardsInHand()
+    );
   }
 
   private incrementCurrentPlayer() {
@@ -109,9 +118,9 @@ export class Game {
   }
 
   private dealInitialCards() {
-    for (let i = 0; i < DEFAULT_INITIAL_CARDS; i++) {
+    for (let i = 0; i < DEFAULT_MAX_CARDS_IN_HAND; i++) {
       this.getPlayers().forEach((player) => {
-        player.receiveCard(this.deck.drawSingle());
+        player.receiveCard(this.deck.draw());
       });
     }
   }
