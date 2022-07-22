@@ -77,6 +77,37 @@ export class Game {
     return this;
   }
 
+  public nextTurn() {
+    this.drawMoreCards();
+    this.incrementCurrentPlayer();
+  }
+
+  public isInProgress() {
+    return this.status === GameStatus.InProgress;
+  }
+
+  private drawMoreCards() {
+    this.getCurrentPlayer().receiveCard(this.getDeck().drawAfterTurn());
+  }
+
+  private incrementCurrentPlayer() {
+    if (this.getCurrentPlayerIndex() === -1) {
+      return;
+    }
+
+    this.currentPlayer = this.getPlayers()[this.nextPlayerIndex()];
+  }
+
+  private getCurrentPlayerIndex() {
+    return this.getPlayers().findIndex((player) =>
+      player.is(this.getCurrentPlayer())
+    );
+  }
+
+  private nextPlayerIndex() {
+    return (this.getCurrentPlayerIndex() + 1) % this.getNumberOfPlayers();
+  }
+
   private dealInitialCards() {
     for (let i = 0; i < DEFAULT_INITIAL_CARDS; i++) {
       this.getPlayers().forEach((player) => {
@@ -86,10 +117,10 @@ export class Game {
   }
 
   private isGameEmpty() {
-    return this.getPlayers().length === 0;
+    return this.getNumberOfPlayers() === 0;
   }
 
-  public isInProgress() {
-    return this.status === GameStatus.InProgress;
+  private getNumberOfPlayers() {
+    return this.getPlayers().length;
   }
 }
