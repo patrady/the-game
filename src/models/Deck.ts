@@ -26,7 +26,12 @@ export class Deck {
   }
 
   private range(start: number, end: number) {
-    return [...Array(end - start - 1).keys()];
+    const arr = [];
+    for (let i = start + 1; i < end; i += 1) {
+      arr.push(i);
+    }
+
+    return arr;
   }
 
   private getRandomNumber() {
