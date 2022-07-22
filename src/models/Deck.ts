@@ -13,24 +13,13 @@ export class Deck {
     return this.cards;
   }
 
-  public drawAfterTurn() {
-    if (this.isEmpty()) {
-      throw new Error("There are no cards left in the deck");
+  public draw(maximum: number = 1) {
+    const drawnCards: Card[] = [];
+    while (!this.isEmpty() && drawnCards.length < maximum) {
+      drawnCards.push(...this.cards.splice(this.getRandomNumber(), 1));
     }
 
-    if (this.isOnlyOneCardLeft()) {
-      return [this.drawSingle()];
-    }
-
-    return [this.drawSingle(), this.drawSingle()];
-  }
-
-  public drawSingle() {
-    if (this.isEmpty()) {
-      throw new Error("There are no cards left in the deck");
-    }
-
-    return this.cards.splice(this.getRandomNumber(), 1)[0];
+    return drawnCards;
   }
 
   public isEmpty() {

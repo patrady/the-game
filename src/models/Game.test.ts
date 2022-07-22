@@ -245,14 +245,13 @@ describe("#nextTurn", () => {
 
     player2.playRandomCard(); // 5 cards in hand
     player2.playRandomCard(); // 4 cards in hand
-    // player2.playRandomCard(); // 3 cards in hand
-    // player2.playRandomCard(); // 2 cards in hand
+    player2.playRandomCard(); // 3 cards in hand
+    player2.playRandomCard(); // 2 cards in hand
     game.nextTurn();
 
     expect(player2.getNumberOfCardsInHand()).toEqual(6);
     expect(game.getCurrentPlayer()).toEqual(player3);
 
-    player3.playRandomCard(); // 5 cards in hand
     player3.playRandomCard(); // 5 cards in hand
     game.nextTurn();
 

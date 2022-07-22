@@ -5,7 +5,7 @@ it("returns the cards left to be dealt", () => {
   const deck = new Deck(new Card(1), new Card(100));
   expect(deck.getCards().length).toEqual(98); // Excludes 1 and 100
 
-  deck.drawSingle();
+  deck.draw();
 
   expect(deck.getCards().length).toEqual(97);
 });
@@ -26,63 +26,26 @@ describe("#getCards", () => {
   });
 });
 
-describe("#drawAfterTurn", () => {
-  describe("when two cards are available", () => {
-    it("draws two cards", () => {
-      const deck = new Deck(new Card(1), new Card(5));
+describe("#draw", () => {
+  const maximum = 3;
 
-      const cards = deck.drawAfterTurn();
+  it("draws until it hits the maximum", () => {
+    const deck = new Deck(new Card(1), new Card(5));
 
-      expect(cards.length).toEqual(2);
-    });
-  });
+    const cards = deck.draw(maximum);
 
-  describe("when one card is available", () => {
-    it("draws one card", () => {
-      const deck = new Deck(new Card(1), new Card(3));
-
-      const cards = deck.drawAfterTurn();
-
-      expect(cards.length).toEqual(1);
+    expect(cards.length).toEqual(3);
+    cards.forEach((card) => {
+      expect(card.getValue()).toBeGreaterThan(1);
+      expect(card.getValue()).toBeLessThan(5);
     });
   });
 
   describe("when no cards are available", () => {
-    it("throws an error", () => {
+    it("returns an empty array", () => {
       const deck = new Deck(new Card(1), new Card(1));
 
-      expect(() => deck.drawAfterTurn()).toThrow();
-    });
-  });
-});
-
-describe("#drawSingle", () => {
-  it("draws a random card", () => {
-    const deck = new Deck(new Card(1), new Card(100));
-
-    const card1 = deck.drawSingle();
-
-    expect(card1.getValue()).toBeGreaterThan(1);
-    expect(card1.getValue()).toBeLessThan(100);
-
-    const card2 = deck.drawSingle();
-
-    expect(card2.isNot(card1)).toBeTruthy();
-    expect(card1.getValue()).toBeGreaterThan(1);
-    expect(card1.getValue()).toBeLessThan(100);
-  });
-
-  describe("when no cards are left", () => {
-    it("throws an error", () => {
-      const deck = new Deck(new Card(1), new Card(5));
-
-      deck.drawSingle(); // Draw the 2
-      deck.drawSingle(); // Draw the 3
-      deck.drawSingle(); // Draw the 4
-
-      expect(() => deck.drawSingle()).toThrow(
-        "There are no cards left in the deck"
-      );
+      expect(deck.draw(maximum)).toEqual([]);
     });
   });
 });
