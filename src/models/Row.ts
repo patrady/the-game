@@ -12,7 +12,7 @@ export abstract class Row {
   }
 
   public add(card: Card) {
-    if (!this.isValid(card)) {
+    if (!this.canAccept(card)) {
       throw new Error("This card cannot be played");
     }
 
@@ -20,7 +20,7 @@ export abstract class Row {
     return card;
   }
 
-  public abstract isValid(card: Card): boolean;
+  public abstract canAccept(card: Card): boolean;
 
   protected lastCard() {
     return this.cards[this.cards.length - 1];
@@ -28,7 +28,7 @@ export abstract class Row {
 }
 
 export class AscendingRow extends Row {
-  public isValid(card: Card) {
+  public canAccept(card: Card) {
     return this.isCardGreater(card) || this.isCardTenLess(card);
   }
 
@@ -42,7 +42,7 @@ export class AscendingRow extends Row {
 }
 
 export class DescendingRow extends Row {
-  public isValid(card: Card) {
+  public canAccept(card: Card) {
     return this.isCardLess(card) || this.isCardTenGreater(card);
   }
 

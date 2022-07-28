@@ -1,3 +1,4 @@
+import { Card } from "./Card";
 import { Game } from "./Game";
 import { Player } from "./Player";
 
@@ -7,129 +8,65 @@ let players = [player1];
 beforeEach(() => {
   player1 = new Player({ name: "Player 1" });
   players = [new Player({ name: "Player 1" })];
+
+  jest.resetAllMocks();
 });
 
-xdescribe("#round", () => {
-  describe("at the beginning of the game", () => {
-    it("returns 1", () => {
+describe("#isOver", () => {
+  describe("when the game has not been started", () => {
+    it("returns false", () => {
       const game = new Game(players);
 
-      expect(game.round()).toEqual(1);
+      expect(game.isOver()).toBeFalsy();
     });
   });
 
-  describe("after all players have gone once", () => {
-    it("returns 2", () => {
-      const game = new Game({ maxPlayers: 2 });
-      game.addPlayer(new Player({ name: "Player 1" }));
-      game.addPlayer(new Player({ name: "Player 2" }));
+  describe("when the game has been started", () => {
+    it("returns false", () => {
+      const game = new Game(players);
 
-      expect(game.round()).toEqual(1);
-
-      game.nextTurn();
-      game.nextTurn();
-
-      expect(game.round()).toEqual(2);
-    });
-  });
-});
-
-xdescribe("#getCode", () => {
-  it("returns a 5-character string", () => {
-    const game = new Game(players);
-
-    expect(game.getCode().length).toEqual(5);
-  });
-
-  describe("with a custom preset", () => {
-    it("returns the code", () => {
-      const game = new Game({ code: "abcde" });
-
-      expect(game.getCode()).toEqual("abcde");
-    });
-  });
-});
-
-xdescribe("#share", () => {
-  it("returns a URL to the specific game", () => {
-    const game = new Game({ code: "abcde" });
-
-    expect(game.share()).toEqual("https://www.thegame.io/abcde");
-  });
-});
-
-xdescribe("#isOver", () => {
-  it("returns true by default", () => {
-    const game = new Game(players);
-
-    expect(game.isOver()).toBeTruthy();
-  });
-
-  describe("when there are no players", () => {
-    it("returns true", () => {
-      const game = new Game([]);
-      const player1 = new Player({ name: "Player 1" });
-
-      game.addPlayer(player1);
-      game.play();
+      game.start();
 
       expect(game.isOver()).toBeFalsy();
-
-      game.removePlayer(player1);
-      expect(game.isOver()).toBeTruthy();
     });
   });
 
-  describe("when all the cards are gone", () => {
-    it("returns true", () => {});
-  });
-});
+  describe("when all the cards are gone from the deck", () => {
+    describe("when all players are out of cards", () => {
+      it("returns true", () => {
+        const game = new Game(players);
+        game.configure({ maximum: 5, handSize: 1 }); // Deck: [2, 3, 4]
 
-xdescribe("#turn", () => {
-  it("returns the player whose turn it is", () => {
-    const game = new Game();
-    const player1 = new Player({ name: "Player 1" });
-    const player2 = new Player({ name: "Player 2" });
-    const player3 = new Player({ name: "Player 3" });
+        game.start();
 
-    game.addPlayer(player1);
-    game.addPlayer(player2);
-    game.addPlayer(player3);
+        game.getCurrentPlayer().playRandomCard(); // Play 2
+        game.nextTurn();
 
-    game.play();
-    expect(game.turn()).toEqual(player1);
+        game.getCurrentPlayer().playRandomCard(); // Play 3
+        game.nextTurn();
 
-    game.nextTurn();
-    expect(game.turn()).toEqual(player2);
+        game.getCurrentPlayer().playRandomCard(); // Play 4
+        game.nextTurn();
 
-    game.nextTurn();
-    expect(game.turn()).toEqual(player3);
-
-    game.nextTurn();
-    expect(game.turn()).toEqual(player1);
-  });
-
-  describe("when all players have left the game", () => {
-    it("throws an error", () => {
-      const game = new Game();
-      const player1 = new Player({ name: "Player 1" });
-
-      game.addPlayer(player1);
-      game.play();
-      game.removePlayer(player1);
-
-      expect(game.turn()).toThrow("There are no players");
+        expect(game.isOver()).toBeTruthy();
+      });
     });
-  });
 
-  describe("when the game is over", () => {
-    it("throws an error", () => {
-      const game = new Game();
+    describe("when at least one player still has cards", () => {
+      it("returns false", () => {
+        const game = new Game(players);
+        game.configure({ maximum: 5, handSize: 1 }); // Deck: [2, 3, 4], Player 1: []
 
-      game.play();
-      game.stop();
+        game.start(); // Deck: [3, 4], Player 1: [2]
 
-      expect(game.turn()).toThrow("The game is over");
+        game.getCurrentPlayer().playRandomCard(); // Play 2
+        game.nextTurn(); // Deck: [4], Player 1: [3]
+
+        game.getCurrentPlayer().playRandomCard(); // Play 3
+        game.nextTurn(); // Deck: [], Player 1: [4]
+
+        expect(game.isOver()).toBe(false);
+      });
     });
   });
 });
@@ -138,11 +75,11 @@ describe("#start", () => {
   it("changes the status", () => {
     const game = new Game(players);
 
-    expect(game.status).toEqual("NotStarted");
+    expect(game.getStatus()).toEqual("NotStarted");
 
     game.start();
 
-    expect(game.status).toEqual("InProgress");
+    expect(game.getStatus()).toEqual("InProgress");
   });
 
   it("initializes the rows", () => {
@@ -257,5 +194,33 @@ describe("#nextTurn", () => {
 
     expect(player3.getNumberOfCardsInHand()).toEqual(6);
     expect(game.getCurrentPlayer()).toEqual(player1);
+  });
+});
+
+describe("#getTurns", () => {
+  it("returns the turns taken in the game", () => {
+    const player1 = new Player({ name: "Player 1" });
+    const player2 = new Player({ name: "Player 2" });
+    const players = [player1, player2];
+    const game = new Game(players);
+
+    game.start();
+    player1.playRandomCard(); // TODO: I want this to `game.playCard` but that leads to some testing woahs
+    player1.playRandomCard();
+    game.nextTurn();
+
+    const turn1 = game.getTurns()[0];
+    expect(turn1.getPlayer()).toEqual(player1);
+    expect(turn1.getNumberOfMoves()).toEqual(2);
+
+    player2.playRandomCard(); // 5 cards in hand
+    player2.playRandomCard(); // 4 cards in hand
+    player2.playRandomCard(); // 3 cards in hand
+    player2.playRandomCard(); // 2 cards in hand
+    game.nextTurn();
+
+    const turn2 = game.getTurns()[0];
+    expect(turn2.getPlayer()).toEqual(player2);
+    expect(turn2.getNumberOfMoves()).toEqual(4);
   });
 });

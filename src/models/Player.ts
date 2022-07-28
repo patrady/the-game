@@ -3,13 +3,14 @@ import { Row } from "./Row";
 
 type PlayerProps = {
   name: string;
+  hand?: Card[];
 };
 
 export class Player {
   name: string;
   hand: Card[];
 
-  constructor({ name }: PlayerProps) {
+  constructor({ name, hand = [] }: PlayerProps) {
     this.name = name;
     this.hand = [];
   }
@@ -50,5 +51,9 @@ export class Player {
 
   public getNumberOfCardsInHand() {
     return this.getHand().length;
+  }
+
+  public isOutOfCards() {
+    return this.getHand().length === 0;
   }
 }

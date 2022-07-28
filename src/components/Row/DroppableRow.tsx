@@ -10,7 +10,7 @@ export type DroppableRowProps = {
 export const DroppableRow = ({ onDrop, row, ...rest }: DroppableRowProps) => {
   const [, drop] = useDrop<{ value: number }>({
     accept: "card",
-    canDrop: ({ value }) => row.isValid(new CardModel(value)),
+    canDrop: ({ value }) => row.canAccept(new CardModel(value)),
     drop: ({ value }) => onDrop(new CardModel(value)),
   });
 

@@ -13,28 +13,33 @@ import { Row as RowModel } from "./models";
 const room = new Room();
 room.addPlayer(new Player({ name: "Patrick" }));
 room.addPlayer(new Player({ name: "James" }));
-room.addPlayer(new Player({ name: "Julie" }));
-room.addPlayer(new Player({ name: "Mary" }));
+
+const game = new Game(room.getPlayers());
+game.configure({ maximum: 20, handSize: 3 });
 
 const App = () => {
-  const [game, setGame] = useState(new Game(room.getPlayers()));
   const [cardsPlayedInTurn, setCardsPlayedInTurn] = useState<CardModel[]>([]);
   const [counter, setCounter] = useState(0); // eslint-disable-line @typescript-eslint/no-unused-vars
   const canEndTurn = cardsPlayedInTurn.length >= 2;
 
   function startGame() {
-    setGame(game.start());
+    game.start();
     setCounter((prev) => prev + 1);
   }
 
   function dropCard(card: CardModel, row: RowModel) {
-    game.getCurrentPlayer().playCard(card, row);
+    game.playCard(card, row);
     setCardsPlayedInTurn((prev) => [...prev, card]);
   }
 
   function endTurn() {
     game.nextTurn();
     setCardsPlayedInTurn([]);
+  }
+
+  if (game.isOver()) {
+    console.log('game', game);
+    return <div>Game Over</div>;
   }
 
   return (
