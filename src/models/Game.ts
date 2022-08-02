@@ -56,6 +56,10 @@ export class Game {
     return this.maxCard;
   }
 
+  public getStatus() {
+    return this.status;
+  }
+
   public start() {
     if (this.isGameEmpty()) {
       throw new Error("The game cannot be started without any players");

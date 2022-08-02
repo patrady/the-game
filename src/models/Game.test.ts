@@ -138,11 +138,11 @@ describe("#start", () => {
   it("changes the status", () => {
     const game = new Game(players);
 
-    expect(game.status).toEqual("NotStarted");
+    expect(game.getStatus()).toEqual("NotStarted");
 
     game.start();
 
-    expect(game.status).toEqual("InProgress");
+    expect(game.getStatus()).toEqual("InProgress");
   });
 
   it("initializes the rows", () => {
